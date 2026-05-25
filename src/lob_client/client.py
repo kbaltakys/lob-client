@@ -269,6 +269,11 @@ class SignalSubscription:
         raise LobStreamError(f"unexpected message type: {type(item)} - {item}")
 
     def close(self) -> None:
+        """Stop the background reader and close the websocket.
+
+        Safe to call more than once. Called automatically when the
+        subscription is used as a context manager.
+        """
         self._stop.set()
         self._force_enqueue(ConnectionClosed(f"subscription closed: {self.keywords}"))
         ws = self._ws
